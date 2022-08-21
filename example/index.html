@@ -1,11 +1,22 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>compLite</title>
+	<title>complite</title>
 </head>
 <body>
-	<!-- App component: -->
-	<app-comp></app-comp>
+	<div>
+		<a href='#/'>Home</a>
+		<a href='#/new'>New page</a>
+	</div>
+	<router-comp index='/'>
+		<route-comp path='/'>
+			<!-- App component: -->
+			<app-comp></app-comp>
+		</route-comp>
+		<route-comp path='/new'>
+			<new-comp></new-comp>
+		</route-comp>
+	</router-comp>
 
 	<!-- compLite: -->
 	<script src='./../complite.js'></script>
@@ -14,5 +25,6 @@
 	<script src='./names-comp.js'></script>
 	<script src='./name-comp.js'></script>
 	<script src='./counter-comp.js'></script>
+	<script src='./new-comp.js'></script>
 </body>
 </html>

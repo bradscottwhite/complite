@@ -86,3 +86,49 @@ const Comp = (() => {
 	}
 	return Comp
 })();
+
+(() => {
+	var routes = {}
+	var defPath = '/'
+	var curPath = window.location.hash
+	var found = false
+	//var prevPath = ''
+	class RouterComp extends HTMLElement {
+		connectedCallback() {
+			var dom = this.innerHTML
+			defPath = this.getAttribute('index')
+		}
+	}
+	class RouteComp extends HTMLElement {
+		connectedCallback() {
+			var path = this.getAttribute('path')
+			routes[path] = this.innerHTML
+			if ('#' + path === curPath) {
+				found = true
+				//prevPath = path
+			} else
+				this.innerHTML = ''
+		}
+	}
+	//Link-comp....??
+	customElements.define('router-comp', RouterComp)
+	customElements.define('route-comp', RouteComp)
+	if (!found) {
+		window.location.hash = defPath
+		document.querySelector(`route-comp[path='${defPath}']`).innerHTML = routes[defPath]
+	}
+	window.addEventListener('hashchange', () => {
+		curPath = window.location.hash
+		found = false
+		for (var route in routes)
+			if ('#' + route === curPath) {
+				found = true
+				document.querySelector(`route-comp[path='${route}']`).innerHTML = routes[route]
+			} else// if ('#' + route === prevPath)
+				document.querySelector(`route-comp[path='${route}']`).innerHTML = ''
+		if (!found) {
+			window.location.hash = defPath
+			document.querySelector(`route-comp[path='${defPath}']`).innerHTML = routes[defPath]
+		}
+	})
+})();
