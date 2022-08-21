@@ -5,7 +5,7 @@ nameComp.attrs({
 })
 
 nameComp.init(({ name }) => {
-	return `<h1>
-		Howdy sir ${name}!
-	</h1>`
+	return `<h3>
+		<a href='#/name/${name}'>${name}</a>
+	</h3>`
 });

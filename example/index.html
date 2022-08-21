@@ -8,6 +8,7 @@
 		<a href='#/'>Home</a>
 		<a href='#/new'>New page</a>
 	</div>
+
 	<router-comp index='/'>
 		<route-comp path='/'>
 			<!-- App component: -->
@@ -15,6 +16,9 @@
 		</route-comp>
 		<route-comp path='/new'>
 			<new-comp></new-comp>
+		</route-comp>
+		<route-comp path='/name/:name'>
+			<greeting-comp></greeting-comp>
 		</route-comp>
 	</router-comp>
 
@@ -26,5 +30,6 @@
 	<script src='./name-comp.js'></script>
 	<script src='./counter-comp.js'></script>
 	<script src='./new-comp.js'></script>
+	<script src='./greeting-comp.js'></script>
 </body>
 </html>

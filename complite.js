@@ -10,11 +10,6 @@ const App = (() => {
 			this.appComps = {}
 			this.appCompAttrs = {}
 		}
-		attrs(appAttrs) {
-			this.appAttrs = appAttrs
-			for (var attr in appAttrs)
-				this.appCompAttrs[attr] = []
-		}
 		setAttr(attrName, attrVal) {
 			var comps = this.appCompAttrs[attrName]
 			for (var comp in comps)
@@ -22,9 +17,22 @@ const App = (() => {
 		}
 		addComp(comp, compAttrs, compName) {
 			this.appComps[compName] = comp
-			for (var attr in compAttrs)
-				if (this.appAttrs[attr])
-					this.appCompAttrs[attr].push(compName)
+			for (var attr in compAttrs) {
+				if (!this.appAttrs[attr]) {
+					this.appAttrs[attr] = compAttrs[attr]
+					this.appCompAttrs[attr] = []
+				}
+				this.appCompAttrs[attr].push(compName)
+			}
+		}
+		param(id) {
+			const curPath = window.location.hash
+			const els = document.querySelectorAll(`route-comp`)
+			for (var el = els.length - 1; el >= 0; el--) {
+				var path = '#' + els[el].getAttribute('path')
+				if (curPath.includes(path.split(':')[0]) && path.split(':')[1] == id)
+					return curPath.split(path.split(':')[0])[1]
+			}
 		}
 	}
 	return App
@@ -92,21 +100,20 @@ const Comp = (() => {
 	var defPath = '/'
 	var curPath = window.location.hash
 	var found = false
-	//var prevPath = ''
 	class RouterComp extends HTMLElement {
-		connectedCallback() {
-			var dom = this.innerHTML
-			defPath = this.getAttribute('index')
-		}
+		connectedCallback() { defPath = this.getAttribute('index') }
 	}
 	class RouteComp extends HTMLElement {
 		connectedCallback() {
 			var path = this.getAttribute('path')
 			routes[path] = this.innerHTML
-			if ('#' + path === curPath) {
+			if (
+				'#' + path === curPath || (
+					path.includes(':') && curPath.split(path.split(':')[0])[0] === '#' && curPath.includes(path.split(':')[0])
+				)
+			)
 				found = true
-				//prevPath = path
-			} else
+			else
 				this.innerHTML = ''
 		}
 	}
@@ -120,12 +127,17 @@ const Comp = (() => {
 	window.addEventListener('hashchange', () => {
 		curPath = window.location.hash
 		found = false
-		for (var route in routes)
-			if ('#' + route === curPath) {
+		for (var route in routes) {
+			if (
+				'#' + route === curPath || (
+					route.includes(':') && curPath.split(route.split(':')[0])[0] === '#' && curPath.includes(route.split(':')[0])
+				)
+			) {
 				found = true
 				document.querySelector(`route-comp[path='${route}']`).innerHTML = routes[route]
-			} else// if ('#' + route === prevPath)
+			} else
 				document.querySelector(`route-comp[path='${route}']`).innerHTML = ''
+		}
 		if (!found) {
 			window.location.hash = defPath
 			document.querySelector(`route-comp[path='${defPath}']`).innerHTML = routes[defPath]
