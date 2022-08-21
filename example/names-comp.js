@@ -1,7 +1,9 @@
-const namesComp = new compLite('names-comp')
+const namesComp = new Comp('names-comp', app)
+
 namesComp.attrs({
 	names: JSON
 })
+
 namesComp.init(({ names }) => {
 	var html = ''
 	for (var name in names)

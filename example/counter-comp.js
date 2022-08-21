@@ -1,4 +1,4 @@
-const counterComp = new compLite('counter-comp')
+const counterComp = new Comp('counter-comp', app)
 
 counterComp.attrs({
 	num: Number
